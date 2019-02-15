@@ -17,7 +17,6 @@ public class HelloWorld extends CordovaPlugin {
         if (action.equals("coolMethod")) {
             JSONObject r = new JSONObject();
             r.put("message", args.getString(0));
-
             this.coolMethod(r, callbackContext);
             return true;
         }
