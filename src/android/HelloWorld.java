@@ -53,6 +53,7 @@ public class HelloWorld extends CordovaPlugin {
     private byte[] mWriteBuffer;
     private byte[] mReadBuffer;
 
+    private Activity activity;
 
     // actions definitions
 	private static final String ACTION_READ = "aduRead";
@@ -65,7 +66,8 @@ public class HelloWorld extends CordovaPlugin {
 
 
     public HelloWorld(){
-        mManager = (UsbManager)getSystemService(Context.USB_SERVICE);
+        mManager = (UsbManager)cordova.getActivity().getSystemService(Context.USB_SERVICE);
+        activity = cordova.cordova.getActivity();
     }
 
     @Override
@@ -300,7 +302,7 @@ public class HelloWorld extends CordovaPlugin {
 			
 			if (mDeviceConnection != null) {
 				try {
-					unregisterReceiver(mUsbReceiver);
+					activity.unregisterReceiver(mUsbReceiver);
 				} catch (IOException e) {
 					// Ignore
 				}
@@ -315,11 +317,11 @@ public class HelloWorld extends CordovaPlugin {
 	public void onResume(boolean multitasking) {
 		Log.d(TAG, "Resumed");
 
-        mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+        mPermissionIntent = PendingIntent.getBroadcast(this.activity, 0, new Intent(ACTION_USB_PERMISSION), 0);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-        registerReceiver(mUsbReceiver, filter);
+        activity.registerReceiver(mUsbReceiver, filter);
 
         boolean bFoundADU = findAduDevice();
         Log.d(TAG, "Found ADU: " + bFoundADU);
