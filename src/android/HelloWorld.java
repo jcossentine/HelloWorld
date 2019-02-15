@@ -15,6 +15,7 @@ import android.os.Bundle;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.io.IOException;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -22,6 +23,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import android.hardware.usb.*;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 ///
 
 /**
@@ -30,7 +37,7 @@ import android.hardware.usb.*;
 public class HelloWorld extends CordovaPlugin {
 
     // logging tag
-    private final String TAG = Serial.class.getSimpleName();
+    private final String TAG = HelloWorld.class.getSimpleName();
     private static final String ACTION_USB_PERMISSION = "com.ontrak.aduexample.USB_PERMISSION";
 
     // Vendor and product IDs from: http://www.ontrak.net/Nodll.htm
@@ -38,7 +45,7 @@ public class HelloWorld extends CordovaPlugin {
 
     PendingIntent mPermissionIntent;
 
-    private UsbManager mManager = (UsbManager)getSystemService(Context.USB_SERVICE);
+    private UsbManager mManager;
     private UsbDeviceConnection mDeviceConnection;
     private UsbDevice mAduDevice;
     private UsbEndpoint mEpIn;
@@ -56,8 +63,14 @@ public class HelloWorld extends CordovaPlugin {
 
     private boolean sleepOnPause;
 
+
+    public HelloWorld(){
+        mManager = (UsbManager)getSystemService(Context.USB_SERVICE);
+    }
+
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        JSONObject arg_object = args.optJSONObject(0);
         // close the serial port
 		if (ACTION_CLOSE.equals(action)) {
 			closeAduDevice(callbackContext);
@@ -116,7 +129,6 @@ public class HelloWorld extends CordovaPlugin {
                         + "Serial #: " + device.getSerialNumber() + "\n";
 
                 Log.d(TAG, deviceInfoStr);
-                mDeviceInfoText.setText(deviceInfoStr);
 
                 mManager.requestPermission(device, mPermissionIntent);
 
@@ -186,7 +198,7 @@ public class HelloWorld extends CordovaPlugin {
 						if (numBytesRead < 0) {
                             final byte[] data = new byte[0];
 
-                            if(numberBytesRead == -1){
+                            if(numBytesRead == -1){
                                 status = PluginResult.Status.NO_RESULT;
                             }
 
