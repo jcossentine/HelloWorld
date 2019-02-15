@@ -67,7 +67,7 @@ public class HelloWorld extends CordovaPlugin {
 
     public HelloWorld(){
         mManager = (UsbManager)cordova.getActivity().getSystemService(Context.USB_SERVICE);
-        activity = cordova.cordova.getActivity();
+        activity = cordova.getActivity();
     }
 
     @Override
