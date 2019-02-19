@@ -213,7 +213,7 @@ public class HelloWorld extends CordovaPlugin {
 							callbackContext.sendPluginResult(new PluginResult(status,(char)mReadBuffer[1]));
 						}
 					}
-					catch (IOException e) {
+					catch (Exception e) {
 						// deal with error
 						Log.d(TAG, e.getMessage());
 						callbackContext.error(e.getMessage());
@@ -247,7 +247,7 @@ public class HelloWorld extends CordovaPlugin {
                             callbackContext.success();
                         }
 					}
-					catch (IOException e) {
+					catch (Exception e) {
 						// deal with error
 						Log.d(TAG, e.getMessage());
 						callbackContext.error(e.getMessage());
@@ -275,7 +275,7 @@ public class HelloWorld extends CordovaPlugin {
                     mDeviceConnection = null;
 					callbackContext.success();
 				}
-				catch (IOException e) {
+				catch (Exception e) {
 					// deal with error
 					Log.d(TAG, e.getMessage());
 					callbackContext.error(e.getMessage());
@@ -303,7 +303,7 @@ public class HelloWorld extends CordovaPlugin {
 			if (mDeviceConnection != null) {
 				try {
 					activity.unregisterReceiver(mUsbReceiver);
-				} catch (IOException e) {
+				} catch (Exception e) {
 					// Ignore
 				}
 			}
@@ -347,7 +347,7 @@ public class HelloWorld extends CordovaPlugin {
             }
             mDeviceConnection = null;
         }
-        catch (IOException e) {
+        catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
 		
